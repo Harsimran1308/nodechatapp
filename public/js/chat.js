@@ -40,7 +40,7 @@ var params;
 
             /* WILL BE TRIGGERED BY SERVER TO UPDATE LIST OF ONLINE USER */
             socket.on('updateUserList',function(users){
-                var ol = jQuery('<ul></ul>');
+                var ul = jQuery('<ul></ul>');
 
                 /* LOOP FOR CREATING ONLINE USERS */
                 users.forEach(function(user){
@@ -49,10 +49,10 @@ var params;
                     li.append(span);
                     var value=user;
                     li.append(document.createTextNode(value));
-                    ol.append(li);
+                    ul.append(li);
                 })
 
-                jQuery('#users').html(ol);
+                jQuery('#users').html(ul);
             });
             
             /* WILL BE TRIGGERED BY SERVER FOR NEW MESSAGE */

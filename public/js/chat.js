@@ -33,7 +33,7 @@ var params;
 
             });
 
-            /* WILL TRIGGER WHEN USER LOGS OUT */
+            /* WILL TRIGGER WHEN SERVER IS OUT */
             socket.on('disconnect',function(){
                 console.log('disconnected from server');
             });

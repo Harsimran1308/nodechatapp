@@ -1,5 +1,6 @@
 var socket = io();
 var params;
+            /* FUNCTION TO SEE IF SCROLL DOWN IS REQUIRED */
             function scrollToBottom(){
                 var messages = jQuery('#messages');
                 var newMessage = messages.children('li:last-child');
@@ -13,9 +14,13 @@ var params;
                     console.log('scroll down');
                 }
             }
+            /* WILL TRIGGER WHEN USER LOGS IN  */
             socket.on('connect',function(){
-                params = jQuery.deparam(window.location.search);
-               socket.emit('join',params,function(err){
+                params = jQuery.deparam(window.location.search);     /* DEPARAMS IS USED TO FETCH DETAILS IN URL */
+                /* SENDING DETAILS TO SERVER 
+                    IF ERROR OCCURS ALERT WILL BE SHOWN NAVIGATE BACK TO LOG IN PAGE
+                */
+                socket.emit('join',params,function(err){
                     if(err){
                         alert(err);
                         window.location.href = '/';
@@ -28,13 +33,16 @@ var params;
 
             });
 
+            /* WILL TRIGGER WHEN USER LOGS OUT */
             socket.on('disconnect',function(){
                 console.log('disconnected from server');
             });
 
+            /* WILL BE TRIGGERED BY SERVER TO UPDATE LIST OF ONLINE USER */
             socket.on('updateUserList',function(users){
                 var ol = jQuery('<ul></ul>');
 
+                /* LOOP FOR CREATING ONLINE USERS */
                 users.forEach(function(user){
                     var li=jQuery('<li></li>');
                     var span=jQuery('<span class="dot"></span>');
@@ -47,9 +55,11 @@ var params;
                 jQuery('#users').html(ol);
             });
             
+            /* WILL BE TRIGGERED BY SERVER FOR NEW MESSAGE */
             socket.on('newMessage',function(message){
                 var formattedTime = moment(message.createdAt).format('h:mm a');
                 var toset_id;
+                /* CONDITION TO SEE WHETHER NEW MESSAGE IS FROM ADMIN USERONLINE OR SAME USER  */
                 if(message.from == "Admin:" || message.from == "Admin") {
                     toset_id = "admin";
                 }
@@ -59,7 +69,6 @@ var params;
                 else {
                     toset_id = "friend";
                 } 
-                // var template = jQuery('#message-template').html();
                 var li=jQuery('<li></li>');
                 li.attr("class","message");
                 li.attr("id",toset_id);
@@ -77,20 +86,12 @@ var params;
                 div_from.append(span);
                 li.append(div_from);
                 li.append(div_text);
-               
-                // var html
-                // var html = Mustache.render(template, {
-                //   text: message.text,
-                //   from: message.from,
-                //   createdAt: formattedTime
-                // });
                 jQuery('#messages').append(li);
                 scrollToBottom();
             });
-            socket.on('newEmail',function(email){
-                console.log('new Email',email);
-            });
 
+/* WILL TRIGGERED ON CLICK OF SEND BUTTON BY USER 
+   SENDING USER MESSAGE TO SERVER WITH USER NAME,ROOM AND MESSAGE */
 jQuery('#message-form').on('submit',function(e) {
     e.preventDefault();
     var messageTextBox = jQuery('[name=message]');
@@ -100,6 +101,6 @@ jQuery('#message-form').on('submit',function(e) {
         from:message.name,
         text:messageTextBox.val()
     },function(){
-        messageTextBox.val('')
+        messageTextBox.val('')     /* SETTING TEXT BOX TO EMPTY WHEN MESSAGE IS SEND */
     });
 });

@@ -1,13 +1,13 @@
 /* MODULE IMPORTS */
 const path = require('path');
-const http = require('http');
 const express = require('express');
 const socketIO = require('socket.io');
 const publicPath = path.join(__dirname, '../public');
+const http = require('http');
 const {Users} = require('./users');
 
 
-/* CREATING INSTANCES */
+/* CREATING SERVER */
 var app = express();
 var server = http.createServer(app);
 var io = socketIO(server);
@@ -16,7 +16,6 @@ var io = socketIO(server);
 var users = new Users();
 
 /* MIDDLEWARE */
-
 app.use(express.static(publicPath));
 
 
